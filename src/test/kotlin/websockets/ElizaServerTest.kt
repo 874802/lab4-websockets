@@ -8,6 +8,7 @@ import jakarta.websocket.ContainerProvider
 import jakarta.websocket.OnMessage
 import jakarta.websocket.Session
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -36,7 +37,6 @@ class ElizaServerTest {
         assertEquals("The doctor is in.", list[0])
     }
 
-    @Disabled // Remove this line when you implement onChat
     @Test
     fun onChat() {
         logger.info { "Test thread" }
@@ -48,9 +48,15 @@ class ElizaServerTest {
         latch.await()
         val size = list.size
         // 1. EXPLAIN WHY size = list.size IS NECESSARY
+        //Because you need to have an stable value for size, because sometimes can be 4 or 5 so this
+        // we assure ourselves.
         // 2. REPLACE BY assertXXX expression that checks an interval; assertEquals must not be used;
+        assertTrue(size in 4..5)
         // 3. EXPLAIN WHY assertEquals CANNOT BE USED AND WHY WE SHOULD CHECK THE INTERVAL
+        //The size is variable, it could be 4 or 5, depending on the device, so using assertEquals 
+        //force us to use 4 or 5 instead of both
         // 4. COMPLETE assertEquals(XXX, list[XXX])
+        assertEquals("Please don't apologize.",list[3])
     }
 }
 
@@ -73,7 +79,7 @@ class ComplexClient(
     private val latch: CountDownLatch,
 ) {
     @OnMessage
-    @Suppress("UNUSED_PARAMETER") // Remove this line when you implement onMessage
+    
     fun onMessage(
         message: String,
         session: Session,
@@ -81,9 +87,12 @@ class ComplexClient(
         logger.info { "Client received: $message" }
         list.add(message)
         latch.countDown()
-        // 5. COMPLETE if (expression) {
-        // 6. COMPLETE   sentence
-        // }
+        if(message == "---"){
+            session.basicRemote.sendText("sorry")
+            //We send "sorry" to the server to get a single response "Please don't apologize."
+            //It's the only answer for that prompt.
+            logger.info{list.size}
+        }
     }
 }
 
