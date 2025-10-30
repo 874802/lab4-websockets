@@ -90,7 +90,7 @@ class ComplexClient(
         if(message == "---"){
             session.basicRemote.sendText("sorry")
             //We send "sorry" to the server to get a single response "Please don't apologize."
-            //It's the only answer for that prompt.
+            //It is the only answer for that prompt.
             logger.info{list.size}
         }
     }
