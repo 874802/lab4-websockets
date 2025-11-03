@@ -51,12 +51,12 @@ class ElizaServerTest {
         //Because you need to have an stable value for size, because sometimes can be 4 or 5 so this
         // we assure ourselves.
         // 2. REPLACE BY assertXXX expression that checks an interval; assertEquals must not be used;
-        assertTrue(size in 4..5)
+        assertTrue(size in 4..5, "Size was $size, expected between 4 and 5")
         // 3. EXPLAIN WHY assertEquals CANNOT BE USED AND WHY WE SHOULD CHECK THE INTERVAL
         //The size is variable, it could be 4 or 5, depending on the device, so using assertEquals 
         //force us to use 4 or 5 instead of both
         // 4. COMPLETE assertEquals(XXX, list[XXX])
-        assertEquals("Please don't apologize.",list[3])
+        assertEquals("Please don't apologize.", list[3])
     }
 }
 
